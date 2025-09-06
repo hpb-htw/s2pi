@@ -2,19 +2,20 @@
 #exclude := $(wildcard _*.tex)
 #tex := $(wildcard *.tex)
 asy := $(wildcard *.asy)
-exclude := tools.asy
+exclude := tools.asy globalsetting.asy
 asy := $(filter-out $(exclude), $(asy))
 pdf := $(asy:.asy=.pdf)
 
+ASY=python3 runasy.py
 
 tmp_ext := aux out log pre synctex.gz
 
 all: $(pdf)
 
 %.pdf: %.asy
-	asy $<
+	$(ASY) $<
 
-$(asy): $(exclude)
+$(asy): $(exclude) shortcut.tex
 	touch $@
 	
 	

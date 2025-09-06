@@ -1,13 +1,8 @@
-//import settings;
-//import fontsize;
+import globalsetting;
 
-settings.tex="pdflatex";
-settings.outformat="pdf";
-settings.prc = false;
-settings.render = 0;
-
-import geometry;
 import three;
+import tools;
+
 currentprojection = orthographic((4, 1.5, 1));
 texpreamble("\input{shortcut.tex}");
 
