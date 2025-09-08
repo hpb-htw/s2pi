@@ -1,5 +1,7 @@
 settings.outformat = "pdf";
-settings.render=0;
+settings.render=6;
+
+
 import three;
 size(2cm, 0);
 draw(surface(box((-2,0),(2,2))), lightgray);

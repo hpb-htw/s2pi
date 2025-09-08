@@ -13,7 +13,7 @@ HookHead.size = new real(pen p=currentpen) {return 0.5mm;};
 unitsize(2.5cm);
 
 
-pen bpp=linewidth(bp);
+
 
 var defaultArrow = Arrow3(DefaultHead2);
 
@@ -41,6 +41,8 @@ var secondMark = interp(Pnd, m1, 1.25);
 draw(Pnd -- secondMark, gray);
 
 draw(O -- (1,1,1), arrow=Arrow3(DefaultHead2(normal=Z)), p=gray, light=currentlight);
+
+
 
 showCoordinate();
 
