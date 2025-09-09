@@ -20,22 +20,20 @@ draw(O--3Y, arrow=defaultArrow, p = coordinateAxes + green); //y-axis
 draw(O--3Z, arrow=defaultArrow, p = coordinateAxes + red); //z-axis
 
 
+path3 line1 = O -- (1,1,0);
+draw(line1);
+
+guide3 line2 = X -- Y;
+ContourCurve c1 = ContourCurve(line2, 0.15, 0.85, width=4);
+c1.drawFront();
+
 draw(O -- (1,1,1), arrow=Arrow3(DefaultHead2(normal=Z)), p=gray, light=currentlight);
 
+guide3 line3 = O .. (1.5, 1, 1)  .. (3, 2, 0); 
+pair offset = (0.1, 1.9);
+ContourCurve c3 = ContourCurve(line3, offset, width=4);
 
-triple startAt = (0, 0, 0),
-       stopAt = (1, 0, 0), 
-       normal = Z;
-       
-real distance = 0.5,
-     extend = 1.25; 
-     
-Label ml = Label("$x$", align=NW);
+c3.drawFront(arrowPosition = 1.5);
 
-real labelPosition = 0.5;
-
-
-ThreeDistance td = ThreeDistance(startAt, stopAt, distance, extend, normal=Z, Label("$x$",  align=NW), labelPosition);
-td.draw();
 
 showCoordinate();
