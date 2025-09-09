@@ -136,7 +136,7 @@ struct ThreeDistance {
     
     void draw(picture pic=currentpicture, pen linep = measureLine, pen labelp = measureLabel){
         path3 messung = this.m1 -- this.m2;
-        triple labelP = interp(this.m2, this.m1, this.labelPosition);        
+        triple labelP = interp(this.m1, this.m2, this.labelPosition);        
         label( this.l, labelP );
         
         draw(pic = pic, messung, p=linep, arrow = Arrows3(HookHead2(normal=this.normal), emissive(linep)) );
