@@ -64,6 +64,87 @@ void showCoordinate(string origin = "",align o=N, align x=NW, align y=N, align z
   odot("$Z$", Z, z);
 }
 
+typedef triple mapNode(triple);
+typedef guide3 mapGuide(guide3);
+
+
+/** 
+ * maps all nodes of a guide3 using give map function.
+ * @param g guide3 to be mapped
+ * @param fn Mapping rule must have signature `mapNode`;
+ */
+private guide3 mapNodes(guide3 g, mapNode fn)
+{
+    guide3 img;
+    for(int i = 0; i < size(g); ++i) {
+        img = img -- fn(point(g,i));
+    }
+    if( cyclic(g) ) {
+        img = img -- cycle;
+    }
+    return img;
+}
+
+private guide3[] mapGuides(guide3[] g, mapGuide fn) 
+{
+    guide3[] abb;
+    for(guide3 subGuide : g) {
+        abb.push( fn(subGuide) );
+    }
+    return abb;
+}
+
+
+/**
+ * maps all nodes of the guide3 g to their projection on xy-plane
+ *
+ */
+guide3 grundrissProjekt(guide3 g) 
+{
+    return mapNodes(g, new triple(triple n) {
+        return (n.x, n.y, 0);
+    });    
+}
+
+guide3[] grundrissProjekt(guide3[] g) 
+{
+    return mapGuides(g, grundrissProjekt);    
+}
+
+/**
+ * maps all nodes of the guide3 g to their projection on yz-plane
+ *
+ */
+guide3 aufrissProjekt(guide3 g) 
+{
+    return mapNodes(g, new triple(triple n) {
+        return (0, n.y, n.z);
+    });
+}
+
+guide3[] aufrissProjekt(guide3[] g) 
+{
+    return mapGuides(g, aufrissProjekt);  
+}
+
+
+/**
+ * maps all nodes of the guide3 g to their projection on xz-plane
+ *
+ */
+guide3 seitenrissProjekt(guide3 g) 
+{
+    return mapNodes(g, new triple(triple n) {
+        return (n.x, 0, n.z);
+    });
+}
+
+guide3[] seitenrissProjekt(guide3[] g) 
+{
+    return mapGuides(g, seitenrissProjekt);  
+}
+
+
 
 /**
  * represents distance measurement in 3D.
@@ -183,8 +264,8 @@ struct ContourCurve {
     }
     
     void draw(
-        pen       corePen = outlineContour,
-        real      arrowPosition = -1
+        pen        corePen = outlineContour,
+        real arrowPosition = -1
     ) {
         if (arrowPosition >= 0) {
             arrowbar3 arrow = Arrow3(DefaultHead2(normal=Z), position=arrowPosition);
@@ -195,9 +276,9 @@ struct ContourCurve {
     }
     
     void drawFront(        
-        pen       corePen = outlineContour,
-        light     light   = currentlight,
-        real      arrowPosition = -1
+        pen         corePen = outlineContour,
+        light       light   = currentlight,
+        real  arrowPosition = -1
     ) {
         pen fillpen = light.background;  
         if (invisible(fillpen)) fillpen = light.background;
