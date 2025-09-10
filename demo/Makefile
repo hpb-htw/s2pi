@@ -2,8 +2,8 @@
 #exclude := $(wildcard _*.tex)
 #tex := $(wildcard *.tex)
 asy := $(wildcard *.asy)
-exclude := tools.asy globalsetting.asy
-asy := $(filter-out $(exclude), $(asy))
+libs := tools.asy globalsetting.asy
+asy := $(filter-out $(libs), $(asy))
 pdf := $(asy:.asy=.pdf)
 
 ASY=python3 runasy.py
@@ -15,7 +15,7 @@ all: $(pdf)
 %.pdf: %.asy
 	$(ASY) $<
 
-$(asy): $(exclude) shortcut.tex
+$(asy): $(libs) shortcut.tex
 	touch $@
 	
 	

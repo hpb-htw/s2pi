@@ -1,7 +1,7 @@
 import globalsetting;
 
 import three;
-import tools;
+import "../tools.asy" as tools;
 
 currentprojection = orthographic((4, 1.5, 1));
 texpreamble("\input{shortcut.tex}");

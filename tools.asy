@@ -3,6 +3,10 @@
  *
  * Eine Sammlung von Hilfe-Funktionen und Strukturen für die gängige Zeichnungen in Darstellende Geometrie.
  */
+ 
+ /**
+  * This file depends on the asymptote base module three, which is distribute with asymptote in texlive
+  */
 private import three;
 
 /** big point*/
