@@ -1,3 +1,8 @@
+/**
+ * @file
+ *
+ * Eine Sammlung von Hilfe-Funktionen und Strukturen für die gängige Zeichnungen in Darstellende Geometrie.
+ */
 private import three;
 
 /** big point*/
@@ -17,7 +22,10 @@ pen construction = linewidth(0.15mm);
 pen coordinateAxes = linewidth(0.3mm);
 
 
-/* common routines */
+// common routines
+/**
+ * draws an open dot on picture.
+ */
 void odot(picture pic=currentpicture, triple v, material p=currentpen,
          light light=nolight, string name="", render render=defaultrender)
 {
