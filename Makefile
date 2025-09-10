@@ -26,7 +26,7 @@ clean-html:
 	rm -f *.html
 	
 clean-target:
-	rm -f $(pdf) *.dvi
+	rm -f $(pdf) *.dvi *.ps
 	$(MAKE) clean-html
 	
 clean-all:
