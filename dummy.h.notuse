@@ -1,0 +1,19 @@
+/**
+ * @file
+ */
+ 
+/**
+ *
+ */
+struct Dummy1 {
+
+};
+
+
+/**
+ *
+ *
+ */
+struct Dummy2 {
+
+}
