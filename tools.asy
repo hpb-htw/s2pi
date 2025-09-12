@@ -232,7 +232,7 @@ struct ThreeDistance {
     real labelPosition;
     
     /** 
-     * ggggg
+     * direction of mesument line
      */
     triple direction;
     
@@ -355,7 +355,11 @@ struct ContourCurve {
     }
     
     /**
-     * draw the curve as regular curve
+     * draws the curve as regular curve.
+     * @param corePen pen to draw this curve
+     * @param arrowPosition position of the arrow, this parameter is used as argument `position`
+     * in `Arrow3(DedaultHead2(), position)` to draw arrow of this curve.
+     * if arrowPosition is negeativ, it is ignored.
      */
     void draw(
         pen        corePen = outlineContour,
