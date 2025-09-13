@@ -20,6 +20,10 @@ pen measureLine = linewidth(0.2mm) + gray;
 pen measureLabel = black;
 /** Pen for outline contour */
 pen outlineContour = linewidth(0.3mm) + black;
+
+/** Pen for hidden outline contour */
+pen outlineContour = linewidth(0.3mm) + gray;
+
 /** Pen for construction line */
 pen construction = linewidth(0.15mm);
 /** Pen for coorinate Axes axes  */
