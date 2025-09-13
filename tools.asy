@@ -22,7 +22,7 @@ pen measureLabel = black;
 pen outlineContour = linewidth(0.3mm) + black;
 
 /** Pen for hidden outline contour */
-pen outlineContour = linewidth(0.3mm) + gray;
+pen hiddenContour = linewidth(0.3mm) + gray;
 
 /** Pen for construction line */
 pen construction = linewidth(0.15mm);
