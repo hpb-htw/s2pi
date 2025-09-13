@@ -25,6 +25,7 @@ pen construction = linewidth(0.15mm);
 /** Pen for coorinate Axes axes  */
 pen coordinateAxes = linewidth(0.3mm);
 
+/** Pen for  */
 
 // common routines
 /**
@@ -104,6 +105,27 @@ typedef triple mapNode(triple);
  */
 typedef guide3 mapGuide(guide3);
 
+/**
+ * creates the Grundriss of a point.
+ */
+triple grundriss(triple node) {
+    return (node.x, node.y, 0);
+}
+
+/**
+ * creates the Aufriß of a point
+ */
+triple aufriss(triple node) {
+    return (0, node.y, node.z);
+}
+
+/**
+ * creates a the Seitenriß of a point
+ */
+triple seitenriss(triple node) {
+    return (node.x, 0, node.z);
+}
+
 
 /** 
  * maps all nodes of a guide3 using give map function.
@@ -147,9 +169,7 @@ private guide3[] mapGuides(guide3[] g, mapGuide fn)
  */
 guide3 grundrissProjektion(guide3 g)
 {
-    return mapNodes(g, new triple(triple n) {
-        return (n.x, n.y, 0);
-    });    
+    return mapNodes(g, grundriss);
 }
 
 guide3[] grundrissProjektion(guide3[] g)
@@ -163,9 +183,7 @@ guide3[] grundrissProjektion(guide3[] g)
  */
 guide3 aufrissProjektion(guide3 g)
 {
-    return mapNodes(g, new triple(triple n) {
-        return (0, n.y, n.z);
-    });
+    return mapNodes(g, aufriss);
 }
 
 guide3[] aufrissProjektion(guide3[] g)
@@ -180,9 +198,7 @@ guide3[] aufrissProjektion(guide3[] g)
  */
 guide3 seitenrissProjektion(guide3 g)
 {
-    return mapNodes(g, new triple(triple n) {
-        return (n.x, 0, n.z);
-    });
+    return mapNodes(g, seitenriss);
 }
 
 guide3[] seitenrissProjektion(guide3[] g)
@@ -317,6 +333,11 @@ struct ContourCurve {
     
     /**
     * fragments on the curve, which have background.
+    * Mis-using `pair` as a tupel-datastructure.
+    *
+    * Each element of `offset` is correspondent to a subpath in cover-paths.
+    *
+    * @see #drawFront
     */
     pair[] offset;
     
@@ -374,7 +395,22 @@ struct ContourCurve {
     }
     
     /**
-     * draws the curve as if it is over others lines
+     * draws the curve as if it is over others lines.
+     * This method works as following:
+     *
+     * Firstly it draws cover-paths as #curve defines, but wider than corePen's width.
+     * The color of cover-paths is same background color of currentpicture.
+     * Each segment of #curve is maped to a subpath (=cover-paths), which is matched the correspondent offset.
+     * Only these subpaths are drawn.
+     *
+     * Then it draws an other path as #curve defines, with the given pen `corePen`.
+     * This creates a optical illusition, as if this curve is drawn over other curve.
+     *
+     * @param corePen pen to draw this curve
+     * @param light is used to determine background color for this line, which cover other lines
+     * @param arrowPosition is used as the same way in #draw
+     *
+     * @see #offset
      */
     void drawFront(        
         pen         corePen = outlineContour,
@@ -396,7 +432,38 @@ struct ContourCurve {
 };
 
 
+struct ProjektionStrahl {
 
+    /**
+     * start point of projection ray
+     */
+    triple startPoint;
+
+    /**
+     * function to calculate the stop point of the projection ray
+     */
+    mapNode projektionFn;
+
+    /**
+     * @param startPoint
+     * @param projektionFunktion
+     * @param arrowPosition
+     */
+    void operator init(triple startPoint, mapNode projektionFunktion) {
+        this.startPoint = startPoint;
+        this.projektionFn = projektionFunktion;
+    }
+
+    void draw(pen p = construction, real arrowPosition=0.5) {
+        triple stopPoint = this.projektionFn(this.startPoint);
+        arrowbar3 arrow = Arrow3(DefaultHead2(normal=Z), position=arrowPosition);
+        draw( this.startPoint -- stopPoint,
+            p = p,
+            arrow = arrow
+        );
+    }
+
+};
 
 
 
