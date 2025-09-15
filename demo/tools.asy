@@ -446,8 +446,11 @@ struct ContourCurve {
         if (invisible(fillpen)) fillpen = white;
         pen bg = (width * linewidth(corePen)) + fillpen;
         
+        int i = 0;
         for(pair o : offset){
-            guide3 overPath = subpath(this.curve, o.x, o.y);
+            real x = o.x + i, y = o.y + i;
+            ++i;
+            guide3 overPath = subpath(this.curve, x, y);
             draw(overPath, p = bg);
         }
         
