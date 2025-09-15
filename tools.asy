@@ -9,6 +9,7 @@
   */
 private import three;
 
+
 /** big point*/
 pen bpp=linewidth(bp);
 
@@ -29,9 +30,20 @@ pen construction = linewidth(0.15mm);
 /** Pen for coorinate Axes axes  */
 pen coordinateAxes = linewidth(0.3mm);
 
-/** Pen for  */
+
 
 // common routines
+
+/**
+ *
+ */
+
+triple makeCameraPostion(real altitude, real azimuth, real distance){
+    real theta = radians(altitude);
+    real phi = radians(azimuth);
+    return distance * expi(theta, phi);
+}
+
 /**
  * draws an open dot on picture. This function is only for internal use.
  */
@@ -110,42 +122,45 @@ typedef triple mapNode(triple);
 typedef guide3 mapGuide(guide3);
 
 /**
- * creates the Grundriss of a point.
+ * creates the Grundriss of a point:
+ * \f$ (x, y, z) \mapsto (x, y, 0) \f$
  */
 triple grundriss(triple node) {
     return (node.x, node.y, 0);
 }
 
 /**
- * creates the Aufriß of a point
+ * creates the Aufriß of a point:
+ * \f$ (x, y, z) \mapsto (0, y, z) \f$
  */
 triple aufriss(triple node) {
     return (0, node.y, node.z);
 }
 
 /**
- * creates a the Seitenriß of a point
+ * creates a the Seitenriß of a point:
+ * \f$ (x, y, z) \mapsto (x, 0, z) \f$
  */
 triple seitenriss(triple node) {
     return (node.x, 0, node.z);
 }
 
 /**
- * (x, y, z) -> (x, 0, 0)
+ * \f$(x, y, z) \mapsto (x, 0, 0)\f$
  */
 triple abszisse(triple node) {
     return (node.x, 0, 0);
 }
 
 /**
- * (x, y, z) -> (0, y, 0)
+ * \f$(x, y, z) \mapsto (0, y, 0)\f$
  */
 triple ordinate(triple node) {
     return (0, node.y, 0);
 }
 
 /**
- * (x, y, z) -> (0, 0, z)
+ * \f$(x, y, z) \mapsto (0, 0, z)\f$
  */
 triple kote(triple node) {
     return (0, 0, node.z);
@@ -343,10 +358,9 @@ struct ThreeDistance {
 
 
 
-
 /**
  *
- * represents outlines of a figure.
+ * represents (out)lines of a figure.
  */
 struct ContourCurve {
 
@@ -373,6 +387,11 @@ struct ContourCurve {
     
     /**
      * creates a curve with given offset of each segment of the curve.
+     *
+     * @param
+     * @param
+     * @param
+     *
      */
     void operator init(guide3 curve, pair[] offset = {}, real width=1) {
         this.curve = curve;
@@ -380,8 +399,14 @@ struct ContourCurve {
         this.width = width;
     }
     
-     /**
+    /**
      * creates a curve with given offset of each segment of the curve.
+     *
+     * @param curve
+     * @param offsetStart
+     * @param offsetStop
+     * @param width
+     *
      */
     void operator init(guide3 curve, real offsetStart, real offsetStop, real width=1) {
         this.curve = curve;
@@ -458,7 +483,18 @@ struct ContourCurve {
     }    
 };
 
+struct SegmentedStrahl {
+    triple startPoint;
+    triple stopPoint;
 
+    void operator init(){
+    }
+};
+
+
+/**
+ * Projektion strahl
+ */
 struct ProjektionStrahl {
 
     /**
@@ -481,6 +517,10 @@ struct ProjektionStrahl {
         this.projektionFn = projektionFunktion;
     }
 
+    /**
+     * @param p
+     * @param arrowPosition
+     */
     void draw(pen p = construction, real arrowPosition=0.5) {
         triple stopPoint = this.projektionFn(this.startPoint);
         if(arrowPosition >= 0) {
