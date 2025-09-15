@@ -39,7 +39,7 @@ pen coordinateAxes = linewidth(0.3mm);
  */
 
 triple makeCameraPostion(real altitude, real azimuth, real distance){
-    real theta = radians(altitude);
+    real theta = radians(90 - altitude);
     real phi = radians(azimuth);
     return distance * expi(theta, phi);
 }
