@@ -130,6 +130,26 @@ triple seitenriss(triple node) {
     return (node.x, 0, node.z);
 }
 
+/**
+ * (x, y, z) -> (x, 0, 0)
+ */
+triple abszisse(triple node) {
+    return (node.x, 0, 0);
+}
+
+/**
+ * (x, y, z) -> (0, y, 0)
+ */
+triple ordinate(triple node) {
+    return (0, node.y, 0);
+}
+
+/**
+ * (x, y, z) -> (0, 0, z)
+ */
+triple kote(triple node) {
+    return (0, 0, node.z);
+}
 
 /** 
  * maps all nodes of a guide3 using give map function.
@@ -460,11 +480,15 @@ struct ProjektionStrahl {
 
     void draw(pen p = construction, real arrowPosition=0.5) {
         triple stopPoint = this.projektionFn(this.startPoint);
-        arrowbar3 arrow = Arrow3(DefaultHead2(normal=Z), position=arrowPosition);
-        draw( this.startPoint -- stopPoint,
-            p = p,
-            arrow = arrow
-        );
+        if(arrowPosition >= 0) {
+            arrowbar3 arrow = Arrow3(DefaultHead2(normal=Z), position=arrowPosition);
+            draw( this.startPoint -- stopPoint,
+                p = p,
+                arrow = arrow
+            );
+        }else {
+            draw( this.startPoint -- stopPoint,p = p);
+        }
     }
 
 };
