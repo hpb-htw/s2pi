@@ -65,7 +65,7 @@ void odot(picture pic=currentpicture, triple v, material p=currentpen,
   if (invisible(fillpen)) fillpen = currentlight.background;
   if (invisible(fillpen)) fillpen = white;
   
-  real size=0.5*linewidth(dotsize(q)+q);
+  real size=linewidth(dotsize(q)+q);
   pic.add(new void(frame f, transform3 t, picture pic, projection P) {
       triple V=t*v;
       //assert(!is3D(), "odot() not supported unless settings.prc == false and settings.render != 0");
