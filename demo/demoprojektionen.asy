@@ -1,13 +1,11 @@
 import globalsetting;
 
 import three;
-import tools;
+import "../tools.asy" as tools;
 
 currentprojection = orthographic((4, 1.5, 1));
 texpreamble("\input{shortcut.tex}");
 unitsize(2.5cm);
-
-import tools;
 
 guide3[] curve = (0, 0, 0) -- (0, 1, 1) ^^ (1, 1, 1) -- (1, 1, 0) -- cycle ;
 

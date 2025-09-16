@@ -20,13 +20,13 @@ pen measureLine = linewidth(0.2mm) + gray;
 /** Pen for mesasure label */
 pen measureLabel = black;
 /** Pen for outline contour */
-pen outlineContour = linewidth(0.3mm) + black;
+pen outlineContour = linewidth(0.7mm) + black;
 
 /** Pen for hidden outline contour */
-pen hiddenContour = linewidth(0.3mm) + gray;
+pen hiddenContour = linewidth(0.5mm) + gray;
 
 /** Pen for construction line */
-pen construction = linewidth(0.15mm);
+pen construction = linewidth(0.3mm);
 /** Pen for coorinate Axes axes  */
 pen coordinateAxes = linewidth(0.3mm);
 
@@ -35,9 +35,19 @@ pen coordinateAxes = linewidth(0.3mm);
 // common routines
 
 /**
+ * make a camera triple `(x, y, z)` for given
+ *
+ *     + `altitude` and
+ *     + `azimuth` in degrees and
+ *     + `distance` to target in user length unit.
+ *
+ * @param altitude angle measure from xy-plane (0 to 90)
+ * @param azimuth angle measure from x-axis (0 to 360)
+ * @param distance from camera to target.
+ *
+ * @return a triple `(x, y, z)` as position of camera.
  *
  */
-
 triple makeCameraPostion(real altitude, real azimuth, real distance){
     real theta = radians(90 - altitude);
     real phi = radians(azimuth);
@@ -483,11 +493,51 @@ struct ContourCurve {
     }    
 };
 
+/**
+ *
+ */
 struct SegmentedStrahl {
+
     triple startPoint;
     triple stopPoint;
+    pair[] segments;
 
-    void operator init(){
+    void operator init(triple startPoint, triple stopPoint, pair[] segments={}){
+        this.startPoint = startPoint;
+        this.stopPoint = stopPoint;
+        this.segments = segments;
+    }
+
+    void draw(pen p = construction, real arrowPosition=0.5) {
+        guide3 fullPath = startPoint -- stopPoint;
+        if(segments.length > 0) {
+            for(pair s : segments) {
+                guide3 sp = subpath(fullPath, s.x, s.y);
+                draw(sp, p = p);
+            }
+            if(arrowPosition >= 0) {
+                triple d = unit(startPoint-stopPoint);
+                triple b = interp(startPoint,stopPoint, arrowPosition);
+                arrowbar3 arrow = Arrow3(DefaultHead2(normal=Z));
+                arrow(L="", b = b
+                          , dir = d
+                          , arrow = arrow
+                          , length = 2 * DefaultHead.size(currentpen)
+                          , p = 4*p
+                          , margin = NoMargin3
+                );
+            }
+        } else {
+            if(arrowPosition >= 0) {
+                arrowbar3 arrow = Arrow3(DefaultHead2(normal=Z), position=arrowPosition);
+                draw( fullPath,
+                    p = p,
+                    arrow = arrow
+                );
+            } else {
+                draw(fullPath, p = p);
+            }
+        }
     }
 };
 
@@ -500,7 +550,7 @@ struct ProjektionStrahl {
     /**
      * start point of projection ray
      */
-    triple startPoint;
+    triple startPoint;    
 
     /**
      * function to calculate the stop point of the projection ray
@@ -508,13 +558,19 @@ struct ProjektionStrahl {
     mapNode projektionFn;
 
     /**
+     *
+     */
+    pair[] segments;
+
+    /**
      * @param startPoint
      * @param projektionFunktion
      * @param arrowPosition
      */
-    void operator init(triple startPoint, mapNode projektionFunktion) {
+    void operator init(triple startPoint, mapNode projektionFunktion, pair[] segments = {}) {
         this.startPoint = startPoint;
         this.projektionFn = projektionFunktion;
+        this.segments = segments;
     }
 
     /**
@@ -522,16 +578,8 @@ struct ProjektionStrahl {
      * @param arrowPosition
      */
     void draw(pen p = construction, real arrowPosition=0.5) {
-        triple stopPoint = this.projektionFn(this.startPoint);
-        if(arrowPosition >= 0) {
-            arrowbar3 arrow = Arrow3(DefaultHead2(normal=Z), position=arrowPosition);
-            draw( this.startPoint -- stopPoint,
-                p = p,
-                arrow = arrow
-            );
-        }else {
-            draw( this.startPoint -- stopPoint,p = p);
-        }
+        triple stopPoint = projektionFn(startPoint);
+        SegmentedStrahl(startPoint, stopPoint, segments).draw(p, arrowPosition);
     }
 
 };

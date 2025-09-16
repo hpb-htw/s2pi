@@ -2,7 +2,7 @@
 #exclude := $(wildcard _*.tex)
 #tex := $(wildcard *.tex)
 asy := $(wildcard *.asy)
-libs := tools.asy globalsetting.asy
+libs := ../tools.asy globalsetting.asy
 asy := $(filter-out $(libs), $(asy))
 pdf := $(asy:.asy=.pdf)
 
