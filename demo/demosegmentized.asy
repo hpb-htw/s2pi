@@ -1,7 +1,7 @@
 import globalsetting;
 
 import three;
-import "../tools.asy" as tools;
+import "../spatium.asy" as tools;
 
 currentprojection = orthographic((4, 2.5, 1));
 
